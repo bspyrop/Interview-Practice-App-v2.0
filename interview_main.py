@@ -1,5 +1,7 @@
 from time import sleep
 import streamlit as st
+from services.interview_api_openai import generate_question, grade_answer
+import json
 
 # -----------------------------
 # Page setup
@@ -29,7 +31,12 @@ if "show_recorder" not in st.session_state:
 
 if "recorded_audio_bytes" not in st.session_state:
     st.session_state.recorded_audio_bytes = None
+# global question object to hold rubric etc.
+if "full_question_json" not in st.session_state:
+    st.session_state.full_question_json = None
 
+if "asked_questions" not in st.session_state:
+    st.session_state.asked_questions = []
 
 def reset_to_initial():
     """Clears boxes and returns UI to initial stage (called on Next question)."""
@@ -92,10 +99,36 @@ with col_q1:
 
         # Placeholder question so you can see the UI behavior:
         st.session_state.question_text = "Generating..."
+        
         with st.spinner("Generating next question..."):
-            sleep(5)
+            # sleep(5)
+
+            # print on console for debugging the parameters for generate_question
+            print("Generating question with parameters:")
+            print(f"  position: Software Engineer")
+            print(f"  subject: iOS - Swift programming")
+            print(f"  difficulty: {st.session_state.level}")
+            print(f"  persona: friendly")
+            print(f"  num_followups: 2")
+            print(f"  clarification_allowance: 1")
+            print(f"  avoid_questions: {st.session_state.asked_questions}")
+            print(f"  level: {st.session_state.level}")
+
+            question = generate_question(
+                position="Software Engineer",
+                subject="iOS - Swift programming",
+                difficulty=st.session_state.level,
+                persona="friendly",
+                num_followups=2,
+                clarification_allowance=1,
+                avoid_questions=st.session_state.asked_questions,
+        )  
+            # Store full question object for grading later
+            st.session_state.full_question_json = question 
+            # Append to asked questions to avoid repeats
+            st.session_state.asked_questions.append(question["question"])
             st.session_state.question_text = (
-                f"[Question from ChatGPT for {st.session_state.level}]."
+                f"{question['question']} followups: {question['followups']}"
             )
         st.rerun()
 
@@ -146,13 +179,20 @@ with col_a1:
         #   report = grade_answer(q_obj, st.session_state.answer_text)
         #   st.session_state.feedback_text = format_report(report)
 
-        # Placeholder feedback:
-        st.session_state.feedback_text = (
-            "Overall: 3/5\n"
-            "- Swift fundamentals: 3/5 (OK explanation, missing closure capture list detail)\n"
-            "- Memory management: 3/5 (mention weak/unowned and a concrete example)\n\n"
-            "Tip: Add a short code snippet showing [weak self] in a closure."
+        feedback = grade_answer(
+            st.session_state.full_question_json,
+            st.session_state.answer_text,
         )
+        st.session_state.feedback_text = (json.dumps(feedback, indent=2))
+    
+        # # Placeholder feedback:
+        # st.session_state.feedback_text = (
+        #     "Overall: 3/5\n"
+        #     "- Swift fundamentals: 3/5 (OK explanation, missing closure capture list detail)\n"
+        #     "- Memory management: 3/5 (mention weak/unowned and a concrete example)\n\n"
+        #     "Tip: Add a short code snippet showing [weak self] in a closure."
+        # )
+        st.rerun()
 
 with col_a2:
     # ✅ Not allow to press Recording if question is empty
