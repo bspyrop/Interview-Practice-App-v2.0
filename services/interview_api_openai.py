@@ -106,3 +106,34 @@ Rules:
 
     text = resp.output_text
     return json.loads(text)
+
+def text_to_audio(
+    text: str,
+    *,
+    model: str = "gpt-4o-mini-tts",
+    voice: str = "coral",
+    response_format: str = "mp3",
+    instructions: str | None = None,
+    speed: float | None = None,
+) -> bytes:
+    """
+    OpenAI TTS -> returns raw audio bytes (good for Streamlit st.audio).
+
+    Docs notes:
+    - `response_format` supports: mp3, opus, aac, flac, wav, pcm
+    - `instructions` works with gpt-4o-mini-tts (not with tts-1/tts-1-hd)
+    """
+    kwargs = {
+        "model": model,
+        "voice": voice,
+        "input": text,
+        "response_format": response_format,  # ✅ correct param name
+    }
+
+    if instructions:
+        kwargs["instructions"] = instructions
+    if speed is not None:
+        kwargs["speed"] = speed
+
+    audio_resp = client.audio.speech.create(**kwargs)
+    return audio_resp.content  # ✅ bytes

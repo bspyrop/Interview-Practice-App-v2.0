@@ -1,6 +1,6 @@
 from time import sleep
 import streamlit as st
-from services.interview_api_openai import generate_question, grade_answer
+from services.interview_api_openai import generate_question, grade_answer, text_to_audio
 import json
 
 # -----------------------------
@@ -135,14 +135,17 @@ with col_q1:
 with col_q2:
     # ✅ Not allow to press Listen if question is empty
     if st.button("Listen", use_container_width=True, disabled=question_empty):
-        # TODO: Call OpenAI TTS here using the question text, then store bytes in st.session_state.tts_audio_bytes
-        # Example (DO NOT call now):
-        #   st.session_state.tts_audio_bytes = tts_bytes
-        st.session_state.tts_audio_bytes = None  # placeholder
+        with st.spinner("Generating audio..."):
+            st.session_state.tts_audio_bytes = text_to_audio(
+            st.session_state.question_text,
+            voice="coral",
+            instructions="Speak like a friendly interviewer.",
+            response_format="mp3",
+        )
 
 # If you generate real audio bytes, show the player:
 if st.session_state.tts_audio_bytes:
-    st.audio(st.session_state.tts_audio_bytes, format="audio/mp3")
+    st.audio(st.session_state.tts_audio_bytes, format="audio/mpeg")  # mp3 MIME type
 
 st.divider()
 
