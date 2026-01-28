@@ -11,7 +11,7 @@ st.set_page_config(page_title="Interview Practice App", layout="centered")
 # -----------------------------
 # Session state (UI state only)
 # -----------------------------
-if "level" not in st.session_state:
+if "level" not in st.session_state: 
     st.session_state.level = "Medium"
 
 if "question_text" not in st.session_state:
@@ -178,12 +178,13 @@ with col_a1:
         # Example (DO NOT call now):
         #   report = grade_answer(q_obj, st.session_state.answer_text)
         #   st.session_state.feedback_text = format_report(report)
+        with st.spinner("Evaluating answer..."):
 
-        feedback = grade_answer(
-            st.session_state.full_question_json,
-            st.session_state.answer_text,
-        )
-        st.session_state.feedback_text = (json.dumps(feedback, indent=2))
+            feedback = grade_answer(
+                st.session_state.full_question_json,
+                st.session_state.answer_text,
+            )
+            st.session_state.feedback_text = (json.dumps(feedback, indent=2))
     
         # # Placeholder feedback:
         # st.session_state.feedback_text = (
@@ -192,7 +193,7 @@ with col_a1:
         #     "- Memory management: 3/5 (mention weak/unowned and a concrete example)\n\n"
         #     "Tip: Add a short code snippet showing [weak self] in a closure."
         # )
-        st.rerun()
+            st.rerun()
 
 with col_a2:
     # ✅ Not allow to press Recording if question is empty
