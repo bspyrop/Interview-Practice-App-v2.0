@@ -2,11 +2,17 @@ import os
 import uuid
 from openai import OpenAI 
 import json
+from dotenv import load_dotenv
 
-import openai
+# Load environment variables from .env file
+load_dotenv()
 
-api_key = ""
-client = openai.OpenAI(api_key=api_key)
+api_key = os.environ.get("OPENAI_API_KEY")
+print(f"Using OPENAI_API_KEY: {'set' if api_key else 'not set'}")
+if not api_key:
+    raise ValueError("OPENAI_API_KEY not found in environment variables. Please set it in .env file.")
+
+client = OpenAI(api_key=api_key)
 
 MODEL = "gpt-4.1"  # pick a model you have access to
 
