@@ -20,6 +20,7 @@ def generate_question(
         position, 
         subject, 
         difficulty, 
+        type,
         persona, 
         num_followups, 
         clarification_allowance,     
@@ -35,6 +36,7 @@ Parameters:
 - Position: {position}
 - Subject: {subject}
 - Difficulty: {difficulty}
+- Type: {type}
 - Interviewer persona: {persona}
 - Number of follow-ups: {num_followups}
 - Clarification allowance: {clarification_allowance}

@@ -54,9 +54,19 @@ def reset_to_initial():
 st.header("Interview Practice App")
 
 st.info(
+    
+    "Practice iOS (Swift) interview questions in a realistic, interactive format.\n"
+    "\n"
+    "Select a difficulty level and choose **Programming (code)** or **Theoretical** questions.\n"
+    "Answer by typing or recording, then get rubric-based feedback to strengthen your Swift and iOS skills.\n"
+    "\n"
+    
+    "How to use:\n"
+
     "1) Select the interview level.\n"
-    "2) Click **Next question** to get a new question.\n"
-    "3) Answer by typing (or record), then click **Finish** for feedback."
+    "2) Select Programming (code) questions test coding skills or Theoretical questions assess concepts and design.\n"
+    "3) Click **Next question** to get a new question.\n"
+    "4) Answer by typing (or record), then click **Finish** for feedback."
 )
 
 # -----------------------------
@@ -67,6 +77,14 @@ st.session_state.level = st.radio(
     options=["Easy", "Medium", "Hard"],
     horizontal=True,
     index=["Easy", "Medium", "Hard"].index(st.session_state.level),
+)
+
+# choice between programming and theoretical questions
+question_type = st.radio(
+    "Select question type",
+    options=["Programming (code)", "Theoretical"],
+    horizontal=True,
+    index=0,
 )
 
 st.divider()
@@ -118,6 +136,7 @@ with col_q1:
                 position="Software Engineer",
                 subject="iOS - Swift programming",
                 difficulty=st.session_state.level,
+                type=question_type,
                 persona="friendly",
                 num_followups=2,
                 clarification_allowance=1,
