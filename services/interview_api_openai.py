@@ -36,7 +36,7 @@ Parameters:
 - Position: {position}
 - Subject: {subject}
 - Difficulty: {difficulty}
-- Type: {type}
+- Type: {type} if the type is "Programming (code)" then create a coding question that provides code and ask for changes or find a bug; if the type is "Theoretical" then create a conceptual or design question related to iOS development.
 - Interviewer persona: {persona}
 - Number of follow-ups: {num_followups}
 - Clarification allowance: {clarification_allowance}

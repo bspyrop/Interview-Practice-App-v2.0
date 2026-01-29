@@ -60,7 +60,7 @@ st.info(
     "Select a difficulty level and choose **Programming (code)** or **Theoretical** questions.\n"
     "Answer by typing or recording, then get rubric-based feedback to strengthen your Swift and iOS skills.\n"
     "\n"
-    
+
     "How to use:\n"
 
     "1) Select the interview level.\n"
